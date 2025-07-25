@@ -5,7 +5,12 @@
     <TargetFramework>net9.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
+    <ApplicationIcon>ProteoformExplorer.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ProteoformExplorer.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
@@ -19,6 +24,10 @@
     <ProjectReference Include="..\ProteoformExplorer.Core\ProteoformExplorer.Core.csproj" />
     <ProjectReference Include="..\ProteoformExplorer.Deconvoluter\ProteoformExplorer.Deconvoluter.csproj" />
     <ProjectReference Include="..\ProteoformExplorer.GuiFunctions\ProteoformExplorer.GuiFunctions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ProteoformExplorer.ico" />
   </ItemGroup>
 
 </Project>
