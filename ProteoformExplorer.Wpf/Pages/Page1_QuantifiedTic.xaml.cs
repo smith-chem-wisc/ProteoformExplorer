@@ -72,6 +72,7 @@ namespace ProteoformExplorer.Wpf
             InitializeComponent();
             DataContext = _viewModel;
             DataListView.ItemsSource = DataLoading.LoadedSpectraFiles;
+            Loaded += Page1_QuantifiedTic_Loaded;
             _viewModel.InitializeMinMaxRt();
 
             // right click to zoom is replaced by right click to integrate for this chart
@@ -84,6 +85,22 @@ namespace ProteoformExplorer.Wpf
             PercentIdentifiedAnnotation = new Text();
             PercentIdentifiedAnnotation.Color = GuiSettings.IdentifiedColor;
             PercentIdentifiedAnnotation.FontSize = 16;
+        }
+
+        private void Page1_QuantifiedTic_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataLoading.LoadedSpectraFiles?.Any() != true)
+            {
+                return;
+            }
+
+            DataListView.SelectedItem = DataLoading.LoadedSpectraFiles.First();
+
+            if (DataManagement.CurrentlySelectedFile.Value == null)
+            {
+                WpfFunctions.OnSpectraFileChanged(DataListView, null);
+                DisplayTic();
+            }
         }
 
         private void Home_Click(object sender, RoutedEventArgs e)
