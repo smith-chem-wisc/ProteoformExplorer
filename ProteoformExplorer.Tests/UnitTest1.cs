@@ -126,6 +126,33 @@ namespace Test
         }
 
         [Test]
+        public void TestAdjacentMs1ScanTraversal()
+        {
+            string rawFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData\mcf7_sliced\mcf7_sliced_td.raw");
+            var connection = new KeyValuePair<string, MsDataFile>(rawFile, MsDataFileReader.GetDataFile(rawFile));
+            var cachedData = new KeyValuePair<string, CachedSpectraFileData>(rawFile, new CachedSpectraFileData(connection));
+            var scans = connection.Value.Scans.ToList();
+
+            foreach (var currentScan in scans)
+            {
+                var expectedPrevious = scans
+                    .Where(scan => scan.OneBasedScanNumber < currentScan.OneBasedScanNumber && scan.MsnOrder == 1)
+                    .LastOrDefault();
+                var expectedNext = scans
+                    .Where(scan => scan.OneBasedScanNumber > currentScan.OneBasedScanNumber && scan.MsnOrder == 1)
+                    .FirstOrDefault();
+
+                var previous = PfmXplorerUtil.GetAdjacentScanByMsOrder(cachedData, currentScan.OneBasedScanNumber, -1, 1);
+                var next = PfmXplorerUtil.GetAdjacentScanByMsOrder(cachedData, currentScan.OneBasedScanNumber, 1, 1);
+
+                Assert.That(previous?.OneBasedScanNumber, Is.EqualTo(expectedPrevious?.OneBasedScanNumber));
+                Assert.That(next?.OneBasedScanNumber, Is.EqualTo(expectedNext?.OneBasedScanNumber));
+            }
+
+            connection.Value.CloseDynamicConnection();
+        }
+
+        [Test]
         public static void TestDeconvolution()
         {
             // >sp|P49703|ARL4D_HUMAN ADP-ribosylation factor-like protein 4D OS=Homo sapiens OX=9606 GN=ARL4D PE=1 SV=2

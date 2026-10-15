@@ -167,7 +167,11 @@ namespace ProteoformExplorer.Wpf
             {
                 if (CurrentScan != null && CurrentlyDisplayedSpecies != null)
                 {
-                    var previousScan = DataManagement.CurrentlySelectedFile.Value.GetOneBasedScan(CurrentScan.OneBasedScanNumber - 1);
+                    var previousScan = PfmXplorerUtil.GetAdjacentScanByMsOrder(
+                        DataManagement.CurrentlySelectedFile,
+                        CurrentScan.OneBasedScanNumber,
+                        -1,
+                        1);
 
                     if (previousScan != null)
                     {
@@ -180,7 +184,11 @@ namespace ProteoformExplorer.Wpf
             {
                 if (CurrentScan != null && CurrentlyDisplayedSpecies != null)
                 {
-                    var nextScan = DataManagement.CurrentlySelectedFile.Value.GetOneBasedScan(CurrentScan.OneBasedScanNumber + 1);
+                    var nextScan = PfmXplorerUtil.GetAdjacentScanByMsOrder(
+                        DataManagement.CurrentlySelectedFile,
+                        CurrentScan.OneBasedScanNumber,
+                        1,
+                        1);
 
                     if (nextScan != null)
                     {
