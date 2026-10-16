@@ -279,7 +279,8 @@ namespace ProteoformExplorer.GuiFunctions
         }
 
         public static void PlotSummedChargeStateXic(double modeMass, int z, double rt, double rtWindow, KeyValuePair<string, CachedSpectraFileData> data, Plot xicPlot,
-            bool clearOldPlot, VLine rtIndicator, out List<string> errors, double xOffset = 0, double yOffset = 0, bool waterfall = false, string label = null)
+            bool clearOldPlot, VLine rtIndicator, out List<string> errors, double xOffset = 0, double yOffset = 0, bool waterfall = false, string label = null,
+            double? globalMinRt = null, double? globalMaxRt = null)
         {
             errors = new List<string>();
 
@@ -295,6 +296,21 @@ namespace ProteoformExplorer.GuiFunctions
 
                 var xicData = PfmXplorerUtil.GetSummedChargeXics(scans, modeMass, z);
 
+                if (waterfall && globalMinRt.HasValue && globalMaxRt.HasValue && xicData.Any())
+                {
+                    if (!xicData.Any(p => p.X == globalMinRt.Value))
+                    {
+                        xicData.Add(new Datum(globalMinRt.Value, 0));
+                    }
+
+                    if (!xicData.Any(p => p.X == globalMaxRt.Value))
+                    {
+                        xicData.Add(new Datum(globalMaxRt.Value, 0));
+                    }
+
+                    xicData = xicData.OrderBy(p => p.X).ToList();
+                }
+
                 var xs = xicData.Select(p => p.X + xOffset).ToArray();
                 var ys = xicData.Select(p => p.Y.Value + yOffset).ToArray();
                 var color = xicPlot.GetNextColor();
@@ -307,7 +323,7 @@ namespace ProteoformExplorer.GuiFunctions
                     var text = new Text
                     {
                         Label = label,
-                        X = xs.Min(),
+                        X = xs.Max(),
                         Y = yOffset,
                         Color = color,
                         FontSize = (float)(GuiSettings.ChartAxisLabelFontSize * GuiSettings.DpiScalingX),

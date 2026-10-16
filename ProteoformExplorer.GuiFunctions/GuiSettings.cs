@@ -51,7 +51,7 @@ namespace ProteoformExplorer.GuiFunctions
         public static bool FillWaterfall = true;
         public static bool FillSideView = false;
         public static bool WaterfallXics = false;
-        public static double RtExtractionWindow = 10.0; // in minutes
+        public static double RtExtractionWindow = 6.0; // in minutes
         public static double WaterfallSpacing = 10; // in millimeters
         public static double MassHistogramBinWidth = 500; // in daltons
         public static bool DpiScaling = true;
