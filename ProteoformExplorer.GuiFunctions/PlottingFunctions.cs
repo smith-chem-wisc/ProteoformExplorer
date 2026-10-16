@@ -313,7 +313,11 @@ namespace ProteoformExplorer.GuiFunctions
 
                 var xs = xicData.Select(p => p.X + xOffset).ToArray();
                 var ys = xicData.Select(p => p.Y.Value + yOffset).ToArray();
-                var color = xicPlot.GetNextColor();
+                Color color;
+                if (!waterfall || !GuiSettings.TryGetMappedColor(label, out color))
+                {
+                    color = xicPlot.GetNextColor();
+                }
 
                 xicPlot.AddScatterLines(xs, ys, color, lineWidth: (float)GuiSettings.ChartLineWidth,
                     label: waterfall ? null : label);

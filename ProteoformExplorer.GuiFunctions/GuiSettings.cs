@@ -115,6 +115,23 @@ namespace ProteoformExplorer.GuiFunctions
             return input;
         }
 
+        public static bool TryGetMappedColor(string input, out Color color)
+        {
+            color = default;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            string mappedName = input.ConvertName();
+            var mapping = NameMappings.FirstOrDefault(m => m.ShortName == mappedName);
+
+            if (mapping is null)
+                return false;
+
+            color = mapping.Color;
+            return true;
+        }
+
         public static Color ConvertStringToColor(this string input)
         {
             // Saved to file as short name
