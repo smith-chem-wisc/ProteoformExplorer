@@ -91,6 +91,24 @@
     <None Update="TestData\MetaMorpheus.tsv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\OSM\AllOSMs_mini.osmtsv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\QuantifiedPeaks\TestQuantifiedPeaks.tsv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\QuantifiedPeaks\QuantifiedPeakMappingEdgePeaks.tsv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\QuantifiedPeaks\IntensityVariantPeaks.tsv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\QuantifiedPeaks\MalformedPeaks.tsv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\QuantifiedPeaks\QuantifiedNoSuffix.tsv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\05-26-17_B7A_yeast_td_fract7_rep1.raw">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

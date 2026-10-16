@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using Readers;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -33,6 +34,8 @@ public class FileProcessor
             case SupportedFileType.psmtsv:
             case SupportedFileType.osmtsv:
                 return new FileProcessor(new MetaMorpheusProcessingStrategy());
+            case SupportedFileType.FlashLFQQuantifiedPeak:
+                return new FileProcessor(new QuantifiedPeakProcessingStrategy());
             case SupportedFileType.Ms1Feature:
                 return new FileProcessor(new Ms1FeatureProcessingStrategy());
             case SupportedFileType.Tsv_FlashDeconv:
