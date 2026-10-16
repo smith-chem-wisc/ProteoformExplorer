@@ -299,8 +299,25 @@ namespace ProteoformExplorer.GuiFunctions
                 var ys = xicData.Select(p => p.Y.Value + yOffset).ToArray();
                 var color = xicPlot.GetNextColor();
 
-                xicPlot.AddScatterLines(xs, ys, color, lineWidth: (float)GuiSettings.ChartLineWidth, label: label);
-                xicPlot.Legend(label != null, location: GuiSettings.LegendLocation);
+                xicPlot.AddScatterLines(xs, ys, color, lineWidth: (float)GuiSettings.ChartLineWidth,
+                    label: waterfall ? null : label);
+
+                if (waterfall && !string.IsNullOrWhiteSpace(label))
+                {
+                    var text = new Text
+                    {
+                        Label = label,
+                        X = xs.Min(),
+                        Y = yOffset,
+                        Color = color,
+                        FontSize = (float)(GuiSettings.ChartAxisLabelFontSize * GuiSettings.DpiScalingX),
+                        Alignment = Alignment.MiddleLeft
+                    };
+
+                    xicPlot.Add(text);
+                }
+
+                xicPlot.Legend(!waterfall && label != null, location: GuiSettings.LegendLocation);
 
                 if ((waterfall && GuiSettings.FillWaterfall) || (!waterfall && GuiSettings.FillSideView))
                 {
@@ -328,6 +345,11 @@ namespace ProteoformExplorer.GuiFunctions
                 }
 
                 StyleIonChromatogramPlot(xicPlot, rtIndicator);
+
+                if (waterfall)
+                {
+                    xicPlot.Legend(false);
+                }
             }
             catch (Exception e)
             {
