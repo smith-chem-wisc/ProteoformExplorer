@@ -142,6 +142,30 @@ namespace ProteoformExplorer.Core
             return previous;
         }
 
+        public static MsDataScan GetAdjacentScanByMsOrder(KeyValuePair<string, CachedSpectraFileData> data, int oneBasedScanNumber, int direction, int msOrder)
+        {
+            if (direction != -1 && direction != 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(direction), "Direction must be -1 or 1.");
+            }
+
+            int lastScanNumber = data.Value.DataFile.Value.Scans[^1].OneBasedScanNumber;
+
+            for (int scanNumber = oneBasedScanNumber + direction;
+                scanNumber >= 1 && scanNumber <= lastScanNumber;
+                scanNumber += direction)
+            {
+                var scan = data.Value.GetOneBasedScan(scanNumber);
+
+                if (scan?.MsnOrder == msOrder)
+                {
+                    return scan;
+                }
+            }
+
+            return null;
+        }
+
         public static int GetLastOneBasedScanNumber(KeyValuePair<string, CachedSpectraFileData> data)
         {
             return data.Value.DataFile.Value.Scans[^1].OneBasedScanNumber;

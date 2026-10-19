@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using ThermoFisher.CommonCore.Data.Business;
 using UsefulProteomicsDatabases;
 using Polarity = MassSpectrometry.Polarity;
+using Tolerance = MzLibUtil.Tolerance;
 
 namespace ProteoformExplorer.Deconvoluter
 {

@@ -1,0 +1,4 @@
+File Name	Base Sequence	Full Sequence	Protein Group	Organism	Peptide Monoisotopic Mass	MS2 Retention Time	Precursor Charge	Theoretical MZ	Peak intensity	Peak RT Start	Peak RT Apex	Peak RT End	Peak FWHM	Peak FWHM Status	Peak MZ	Peak Charge	Num Charge States Observed	Peak Detection Type	PIP Q-Value	PIP PEP	PSMs Mapped	Base Sequences Mapped	Full Sequences Mapped	Peak Split Valley RT	Peak Apex Mass Error (ppm)	Decoy Peptide	Random RT
+TestRawFile	ACGUACGU	ACGUACGU	10mer1	TestOrganism	3200.12345	25.5	-3	1066.05	1000000	24.9	25.4	25.9	0.5	Measured	1067.0	-3	3	MSMS			10	1	1	0	-2.5	False	False
+TestRawFile	AUGC	AUGC	4mer1	TestOrganism	1300.2	30.1	-3	433.4	2000000	29.5	30.0	30.5	0.5	Measured	433.9	-3	3	MSMS			8	1	1	0	-1.2	False	False
+TestRawFile	ACGUACGU	ACGUACGU	10mer1	TestOrganism	3200.12345	25.5	-3	1066.05	1000000	24.9	25.4	25.9	0.5	Measured	1067.0	-3	3	MSMS			10	1	1	0	-2.5	False	False

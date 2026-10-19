@@ -1,0 +1,11 @@
+File Name	Base Sequence	Full Sequence	Protein Group	Organism	Peptide Monoisotopic Mass	MS2 Retention Time	Precursor Charge	Theoretical MZ	Peak intensity	Peak RT Start	Peak RT Apex	Peak RT End	Peak FWHM	Peak FWHM Status	Peak MZ	Peak Charge	Num Charge States Observed	Peak Detection Type	PIP Q-Value	PIP PEP	PSMs Mapped	Base Sequences Mapped	Full Sequences Mapped	Peak Split Valley RT	Peak Apex Mass Error (ppm)	Decoy Peptide	Random RT
+EdgeRaw.raw	ACGUACGU	ACGUACGU	edge1	TestOrganism	1500.5	12.3	-2	500.1	1000000	11.0	12.0	13.0	0.5	Measured	501.0	-2	2	MSMS			5	1	1	0	-1.5	False	False
+EdgeRaw.raw	AUGC		edge2	TestOrganism	1600.6	14.3	3	534.2	1000000		14.0		0.5	Measured	535.0		3	MSMS			4	1	1	0	-1.0	False	False
+EdgeRaw.raw			edge3	TestOrganism	1700.7	16.3	4	426.2	1000000	15.0	16.0	17.0	0.5	Measured	427.0	4	4	MSMS			3	1	1	0	-0.5	False	False
+EdgeRaw.raw			edge3	TestOrganism	1700.7	16.3	4	426.2	1000000	15.0	16.0	17.0	0.5	Measured	427.0	4	4	MSMS			3	1	1	0	-0.5	False	False
+EdgeRaw.raw	ACGU	ACGU	edge4	TestOrganism	1800.8	18.3	0	601.3	1000000	17.0	18.0	19.0	0.5	Measured	602.0	0	0	MSMS			2	1	1	0	0.0	False	False
+EdgeRaw.raw	ACGU	ACGU	edge5	TestOrganism	0	19.3	2	0.1	1000000	18.0	19.0	20.0	0.5	Measured	1.0	2	2	MSMS			2	1	1	0	0.0	False	False
+EdgeRaw.raw	ACGU	ACGU	edge6	TestOrganism	-1900.9	20.3	2	-634.4	1000000	19.0	20.0	21.0	0.5	Measured	-633.0	2	2	MSMS			2	1	1	0	0.0	False	False
+EdgeRaw.raw	ACGU	ACGU	edge7	TestOrganism	2000.1	21.3	2	667.5	1000000	20.0		21.0	0.5	Measured	668.0	2	2	MSMS			2	1	1	0	0.0	False	False
+	ACGU	ACGU	edge8	TestOrganism	2100.2	22.3	2	700.6	1000000	20.0	21.0	22.0	0.5	Measured	701.0	2	2	MSMS			2	1	1	0	0.0	False	False
+EdgeRaw.raw	ACGU	ACGU	edge9	TestOrganism	2200.3	23.3	-2	734.7	1000000	NaN	23.0	24.0	0.5	Measured	735.0	-2	2	MSMS			2	1	1	0	0.0	False	False

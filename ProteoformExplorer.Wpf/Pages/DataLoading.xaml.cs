@@ -193,13 +193,9 @@ namespace ProteoformExplorer.Wpf
                     items = InputReaderParser.ReadSpeciesFromFile(file.FullFilePath, out var errors);
                 }
 
-                lock(DataManagement.AllLoadedAnnotatedSpecies)
-                {
-                    foreach (var item in items)
-                    {
-                        DataManagement.AllLoadedAnnotatedSpecies.Add(item);
-                    }
-                }
+                // Append every processed record individually (order and instance identity preserved);
+                // DataManagement.AddLoadedSpecies never deduplicates, groups, or merges records.
+                DataManagement.AddLoadedSpecies(items);
             }
             else
             {
@@ -247,6 +243,7 @@ namespace ProteoformExplorer.Wpf
             Parallel.ForEach(FilesToLoad, file =>
             {
                 LoadFile(file);
+
                 lock (worker)
                 {
                     Interlocked.Increment(ref itemsLoaded);
@@ -267,7 +264,6 @@ namespace ProteoformExplorer.Wpf
             }
 
             RefreshPage();
-            MessageBox.Show("Files successfully loaded");
         }
 
         private void WorkerProgressChanged(object sender, ProgressChangedEventArgs e)

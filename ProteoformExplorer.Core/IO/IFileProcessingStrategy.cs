@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using Readers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +15,7 @@ public class MetaMorpheusProcessingStrategy : IFileProcessingStrategy
 {
     public List<AnnotatedSpecies> ProcessFile(string filePath, string dataset = "")
     {
-        var psms = SpectrumMatchTsvReader.ReadTsv(filePath, out var errors);
+        var psms = SpectrumMatchTsvReader.ReadTsv(filePath, out _);
 
         List<AnnotatedSpecies> species = new List<AnnotatedSpecies>(psms.Count);
         foreach (var spectralMatch in psms)
@@ -62,6 +63,40 @@ public class FlashDeconvTsvProcessingStrategy : IFileProcessingStrategy
             var specie = new AnnotatedSpecies(decon, feature.FeatureIndex.ToString());
             species.Add(specie);
         }
+        return species;
+    }
+}
+
+public class QuantifiedPeakProcessingStrategy : IFileProcessingStrategy
+{
+    public List<AnnotatedSpecies> ProcessFile(string filePath, string dataset = "")
+    {
+        var rows = FileReader.ReadFile<QuantifiedPeakFile>(filePath).Results;
+
+        var groupedRows = rows.GroupBy(row => new
+        {
+            FileName = PfmXplorerUtil.GetFileNameWithoutExtension(row.FileName),
+            row.PeptideMonoisotopicMass,
+            row.FullSequence
+        });
+
+        List<AnnotatedSpecies> species = new List<AnnotatedSpecies>(groupedRows.Count());
+        foreach (var group in groupedRows)
+        {
+            var first = group.First();
+            var charges = group
+                .Select(row => row.PeakCharge is int peakCharge && peakCharge != 0 ? peakCharge : row.PrecursorCharge)
+                .Distinct()
+                .ToList();
+            double rtStart = group.Select(row => row.PeakRTStart.GetValueOrDefault()).Min();
+            double rtEnd = group.Select(row => row.PeakRTEnd.GetValueOrDefault()).Max();
+
+            var deconvolutionFeature = new DeconvolutionFeature(first.PeptideMonoisotopicMass,
+                first.PeakRTApex.GetValueOrDefault(), rtStart, rtEnd, charges, group.Key.FileName);
+
+            species.Add(new AnnotatedSpecies(deconvolutionFeature, group.Key.FullSequence));
+        }
+
         return species;
     }
 }

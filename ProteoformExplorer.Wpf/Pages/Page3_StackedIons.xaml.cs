@@ -97,6 +97,27 @@ namespace ProteoformExplorer.Wpf
                 chargesToPlot.Add(charge.Value);
             }
 
+            double? globalMinRt = null;
+            double? globalMaxRt = null;
+            if (charge != null)
+            {
+                foreach (var file in DataManagement.SpectraFiles.Values)
+                {
+                    var scans = file.GetScansInRtWindow(initialScan.RetentionTime, GuiFunctions.GuiSettings.RtExtractionWindow);
+                    if (!scans.Any())
+                    {
+                        continue;
+                    }
+
+                    globalMinRt = globalMinRt.HasValue
+                        ? System.Math.Min(globalMinRt.Value, scans.First().RetentionTime)
+                        : scans.First().RetentionTime;
+                    globalMaxRt = globalMaxRt.HasValue
+                        ? System.Math.Max(globalMaxRt.Value, scans.Last().RetentionTime)
+                        : scans.Last().RetentionTime;
+                }
+            }
+
             int fileNum = 0;
             foreach (var file in DataManagement.SpectraFiles.OrderBy(p => p.Key.ConvertName()))
             {
@@ -110,7 +131,7 @@ namespace ProteoformExplorer.Wpf
                 {
                     // plot the charge state envelope, one line per file
                     GuiFunctions.PlottingFunctions.PlotSummedChargeStateXic(modeMass, charge.Value, initialScan.RetentionTime, GuiFunctions.GuiSettings.RtExtractionWindow, file, topPlotView.Plot,
-                        fileNum == 0, null, out var errors, 0, 0, true, file.Key.ConvertName());
+                        fileNum == 0, null, out var errors, 0, 0, true, file.Key.ConvertName(), globalMinRt, globalMaxRt);
 
                     if (errors.Any())
                     {
@@ -149,7 +170,7 @@ namespace ProteoformExplorer.Wpf
                 {
                     // plot the charge state envelope, one line per file
                     GuiFunctions.PlottingFunctions.PlotSummedChargeStateXic(modeMass, charge.Value, initialScan.RetentionTime, GuiFunctions.GuiSettings.RtExtractionWindow, file, topPlotView.Plot,
-                        fileNum == 0, null, out var errors, xOffset, yOffset, true, file.Key.ConvertName());
+                        fileNum == 0, null, out var errors, xOffset, yOffset, true, file.Key.ConvertName(), globalMinRt, globalMaxRt);
 
                     if (errors.Any())
                     {

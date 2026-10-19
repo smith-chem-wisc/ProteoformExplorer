@@ -30,8 +30,8 @@ namespace Test
 
             Assert.That(!errors.Any());
             Assert.That(species.Count == 72);
-            Assert.That(species.All(p => p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep2"
-                || p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep1"));
+            Assert.That(species.All(p => p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep2"
+                || p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep1"));
             Assert.That(species.All(p => p.Identification.PrecursorChargeState > 0));
             Assert.That(species.All(p => p.Identification.OneBasedPrecursorScanNumber > 0));
         }
@@ -44,14 +44,15 @@ namespace Test
 
             Assert.That(!errors.Any());
             Assert.That(species.Count == 12);
-            Assert.That(species.All(p => p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep2"
-                || p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep1"));
+            Assert.That(species.All(p => p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep2"
+                || p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep1"));
 
-            species = species.Where(p => p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep1" 
+            species = species.Where(p => p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep1" 
                 && p.Identification.IdentificationScanNum == 9).Take(1).ToList();
             string rawFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData\05-26-17_B7A_yeast_td_fract7_rep1.raw");
-            var connection = new KeyValuePair<string, MsDataFile>(rawFile, MsDataFileReader.GetDataFile(rawFile));
-            var cachedData = new KeyValuePair<string, CachedSpectraFileData>(rawFile, new CachedSpectraFileData(connection));
+            string rawFileKey = PfmXplorerUtil.GetFileNameWithoutExtension(rawFile);
+            var connection = new KeyValuePair<string, MsDataFile>(rawFileKey, MsDataFileReader.GetDataFile(rawFile));
+            var cachedData = new KeyValuePair<string, CachedSpectraFileData>(rawFileKey, new CachedSpectraFileData(connection));
             DataManagement.SpectraFiles = new Dictionary<string, CachedSpectraFileData> { { cachedData.Key, cachedData.Value } };
             cachedData.Value.CreateAnnotatedDeconvolutionFeatures(species);
 
@@ -67,8 +68,8 @@ namespace Test
 
             Assert.That(!errors.Any());
             Assert.That(species.Count == 10);
-            Assert.That(species.All(p => p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep2"
-                || p.SpectraFileNameWithoutExtension == "05-26-17_B7A_yeast_td_fract7_rep1"));
+            Assert.That(species.All(p => p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep2"
+                || p.SpectraFileNameWithoutExtension == "05-26-17_b7a_yeast_td_fract7_rep1"));
 
             Assert.That(species[0].SpeciesLabel == "1 (6983.009)");
             Assert.That(species[0].DeconvolutionFeature.Charges.SequenceEqual(new List<int> { 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }));
@@ -78,8 +79,9 @@ namespace Test
 
             species = species.Where(p => (int)p.DeconvolutionFeature.MonoisotopicMass == 15229).ToList();
             string rawFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData\05-26-17_B7A_yeast_td_fract7_rep1.raw");
-            var connection = new KeyValuePair<string, MsDataFile>(rawFile, MsDataFileReader.GetDataFile(rawFile));
-            var cachedData = new KeyValuePair<string, CachedSpectraFileData>(rawFile, new CachedSpectraFileData(connection));
+            string rawFileKey = PfmXplorerUtil.GetFileNameWithoutExtension(rawFile);
+            var connection = new KeyValuePair<string, MsDataFile>(rawFileKey, MsDataFileReader.GetDataFile(rawFile));
+            var cachedData = new KeyValuePair<string, CachedSpectraFileData>(rawFileKey, new CachedSpectraFileData(connection));
             cachedData.Value.CreateAnnotatedDeconvolutionFeatures(species);
 
             Assert.That(species.First().DeconvolutionFeature.AnnotatedEnvelopes.Count >= 1);
@@ -93,8 +95,8 @@ namespace Test
 
             Assert.That(!errors.Any());
             Assert.That(species.Count == 20);
-            Assert.That(species.First().DeconvolutionFeature.SpectraFileNameWithoutExtension == "3-19-18_MCF7_IM_br1_f1_2_results+_calibrated");
-            Assert.That(species.First().SpectraFileNameWithoutExtension == "3-19-18_MCF7_IM_br1_f1_2_results+_calibrated");
+            Assert.That(species.First().DeconvolutionFeature.SpectraFileNameWithoutExtension == "3-19-18_mcf7_im_br1_f1_2_results+_calibrated");
+            Assert.That(species.First().SpectraFileNameWithoutExtension == "3-19-18_mcf7_im_br1_f1_2_results+_calibrated");
 
             Assert.That(species[0].SpeciesLabel == "1 (10835.862)");
             Assert.That(species[0].DeconvolutionFeature.Charges.SequenceEqual(new List<int> { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 }));
@@ -121,6 +123,33 @@ namespace Test
 
             scan = PfmXplorerUtil.GetClosestScanToRtFromDynamicConnection(cachedData, 59.0);
             Assert.That(scan.OneBasedScanNumber == 52);
+
+            connection.Value.CloseDynamicConnection();
+        }
+
+        [Test]
+        public void TestAdjacentMs1ScanTraversal()
+        {
+            string rawFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData\mcf7_sliced\mcf7_sliced_td.raw");
+            var connection = new KeyValuePair<string, MsDataFile>(rawFile, MsDataFileReader.GetDataFile(rawFile));
+            var cachedData = new KeyValuePair<string, CachedSpectraFileData>(rawFile, new CachedSpectraFileData(connection));
+            var scans = connection.Value.Scans.ToList();
+
+            foreach (var currentScan in scans)
+            {
+                var expectedPrevious = scans
+                    .Where(scan => scan.OneBasedScanNumber < currentScan.OneBasedScanNumber && scan.MsnOrder == 1)
+                    .LastOrDefault();
+                var expectedNext = scans
+                    .Where(scan => scan.OneBasedScanNumber > currentScan.OneBasedScanNumber && scan.MsnOrder == 1)
+                    .FirstOrDefault();
+
+                var previous = PfmXplorerUtil.GetAdjacentScanByMsOrder(cachedData, currentScan.OneBasedScanNumber, -1, 1);
+                var next = PfmXplorerUtil.GetAdjacentScanByMsOrder(cachedData, currentScan.OneBasedScanNumber, 1, 1);
+
+                Assert.That(previous?.OneBasedScanNumber, Is.EqualTo(expectedPrevious?.OneBasedScanNumber));
+                Assert.That(next?.OneBasedScanNumber, Is.EqualTo(expectedNext?.OneBasedScanNumber));
+            }
 
             connection.Value.CloseDynamicConnection();
         }

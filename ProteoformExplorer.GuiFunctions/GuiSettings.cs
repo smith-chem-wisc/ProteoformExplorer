@@ -51,7 +51,7 @@ namespace ProteoformExplorer.GuiFunctions
         public static bool FillWaterfall = true;
         public static bool FillSideView = false;
         public static bool WaterfallXics = false;
-        public static double RtExtractionWindow = 10.0; // in minutes
+        public static double RtExtractionWindow = 6.0; // in minutes
         public static double WaterfallSpacing = 10; // in millimeters
         public static double MassHistogramBinWidth = 500; // in daltons
         public static bool DpiScaling = true;
@@ -113,6 +113,23 @@ namespace ProteoformExplorer.GuiFunctions
             }
 
             return input;
+        }
+
+        public static bool TryGetMappedColor(string input, out Color color)
+        {
+            color = default;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            string mappedName = input.ConvertName();
+            var mapping = NameMappings.FirstOrDefault(m => m.ShortName == mappedName);
+
+            if (mapping is null)
+                return false;
+
+            color = mapping.Color;
+            return true;
         }
 
         public static Color ConvertStringToColor(this string input)

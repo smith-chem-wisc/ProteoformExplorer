@@ -1,5 +1,7 @@
 ﻿using ProteoformExplorer.Core;
+using ProteoformExplorer.Core.IO;
 using ProteoformExplorer.GuiFunctions;
+using Readers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,21 +46,38 @@ namespace ProteoformExplorer.Wpf
                     using (reader = new StreamReader(FullFilePath))
                     {
                         string line = reader.ReadLine();
-                        var fileType = InputReaderParser.GetFileTypeFromHeader(line);
 
-                        if (fileType == InputReaderParser.InputSourceType.ThermoDecon || fileType == InputReaderParser.InputSourceType.Promex
-                            || fileType == InputReaderParser.InputSourceType.FlashDeconv || fileType == InputReaderParser.InputSourceType.ProteoformExplorer
-                            || fileType == InputReaderParser.InputSourceType.TopFD)
+                        SupportedFileType? mzLibFileType = null;
+                        try
+                        {
+                            mzLibFileType = FullFilePath.ParseFileType();
+                        }
+                        catch
+                        {
+                        }
+
+                        if (mzLibFileType == SupportedFileType.FlashLFQQuantifiedPeak)
                         {
                             FileType = FileType.Deconvolution;
                         }
-                        else if (fileType == InputReaderParser.InputSourceType.MetaMorpheus || fileType == InputReaderParser.InputSourceType.TDPortal)
-                        {
-                            FileType = FileType.Identification;
-                        }
                         else
                         {
-                            FileType = FileType.Unknown;
+                            var fileType = InputReaderParser.GetFileTypeFromHeader(line);
+
+                            if (fileType == InputReaderParser.InputSourceType.ThermoDecon || fileType == InputReaderParser.InputSourceType.Promex
+                                || fileType == InputReaderParser.InputSourceType.FlashDeconv || fileType == InputReaderParser.InputSourceType.ProteoformExplorer
+                                || fileType == InputReaderParser.InputSourceType.TopFD)
+                            {
+                                FileType = FileType.Deconvolution;
+                            }
+                            else if (fileType == InputReaderParser.InputSourceType.MetaMorpheus || fileType == InputReaderParser.InputSourceType.TDPortal)
+                            {
+                                FileType = FileType.Identification;
+                            }
+                            else
+                            {
+                                FileType = FileType.Unknown;
+                            }
                         }
                     }
                 }
